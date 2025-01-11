@@ -3,28 +3,73 @@ package varint
 
 import (
 	"bufio"
+	"encoding/binary"
 	"io"
 )
 
-type Int32 int64
+type Int32 int32
 
-// func (i Int32) MarshalBinary(w io.Writer, _ binary.ByteOrder) error
-// func (i Int32) UnmarshalBinary(r io.Reader, _ binary.ByteOrder) error
+func (i *Int32) MarshalBinary(w io.Writer, _ binary.ByteOrder) (int, error) {
+	return WriteInt32(w, int32(*i))
+}
+
+func (i *Int32) UnmarshalBinary(r io.Reader, _ binary.ByteOrder) (int, error) {
+	val, n, err := ReadInt32(r)
+	if err != nil {
+		return n, err
+	}
+
+	*i = Int32(val)
+	return n, nil
+}
 
 type Int64 int64
 
-// func (i Int64) MarshalBinary(w io.Writer, _ binary.ByteOrder) error
-// func (i Int64) UnmarshalBinary(r io.Reader, _ binary.ByteOrder) error
+func (i *Int64) MarshalBinary(w io.Writer, _ binary.ByteOrder) (int, error) {
+	return WriteInt64(w, int64(*i))
+}
 
-type Uint32 int64
+func (i *Int64) UnmarshalBinary(r io.Reader, _ binary.ByteOrder) (int, error) {
+	val, n, err := ReadInt64(r)
+	if err != nil {
+		return n, err
+	}
 
-// func (i Uint32) MarshalBinary(w io.Writer, _ binary.ByteOrder) error
-// func (i Uint32) UnmarshalBinary(r io.Reader, _ binary.ByteOrder) error
+	*i = Int64(val)
+	return n, nil
+}
 
-type Uint64 int64
+type Uint32 uint32
 
-// func (i Uint64) MarshalBinary(w io.Writer, _ binary.ByteOrder) error
-// func (i Uint64) UnmarshalBinary(r io.Reader, _ binary.ByteOrder) error
+func (i *Uint32) MarshalBinary(w io.Writer, _ binary.ByteOrder) (int, error) {
+	return WriteUint32(w, uint32(*i))
+}
+
+func (i *Uint32) UnmarshalBinary(r io.Reader, _ binary.ByteOrder) (int, error) {
+	val, n, err := ReadUint32(r)
+	if err != nil {
+		return n, err
+	}
+
+	*i = Uint32(val)
+	return n, nil
+}
+
+type Uint64 uint64
+
+func (i *Uint64) MarshalBinary(w io.Writer, _ binary.ByteOrder) (int, error) {
+	return WriteUint64(w, uint64(*i))
+}
+
+func (i *Uint64) UnmarshalBinary(r io.Reader, _ binary.ByteOrder) (int, error) {
+	val, n, err := ReadUint64(r)
+	if err != nil {
+		return n, err
+	}
+
+	*i = Uint64(val)
+	return n, nil
+}
 
 // ReadInt32 uses protobuf zig-zag encoding
 func ReadInt32(r io.Reader) (int32, int, error) {
