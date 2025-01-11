@@ -22,6 +22,8 @@ func TestReadUint64(t *testing.T) {
 		{expect: 129, arg: []byte{0b10000001, 0b00000001}},
 		{expect: 256, arg: []byte{0b10000000, 0b00000010}},
 		{expect: 1024, arg: []byte{0b10000000, 0b00001000}},
+		{expect: 9999999, arg: []byte{0b11111111, 0b10101100, 0b11100010, 0b00000100}},
+		{expect: 2147483647, arg: []byte{0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b00000111}},
 		// TODO: try too much bytes
 	}
 
@@ -49,6 +51,8 @@ func TestReadUint32(t *testing.T) {
 		{expect: 129, arg: []byte{0b10000001, 0b00000001}},
 		{expect: 256, arg: []byte{0b10000000, 0b00000010}},
 		{expect: 1024, arg: []byte{0b10000000, 0b00001000}},
+		{expect: 9999999, arg: []byte{0b11111111, 0b10101100, 0b11100010, 0b00000100}},
+		{expect: 2147483647, arg: []byte{0b11111111, 0b11111111, 0b11111111, 0b11111111, 0b00000111}},
 	}
 
 	for _, tt := range cases {
