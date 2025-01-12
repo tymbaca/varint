@@ -2,7 +2,6 @@
 package varint
 
 import (
-	"bufio"
 	"encoding/binary"
 	"io"
 )
@@ -202,9 +201,8 @@ func encodePayloadBits(bits uint64) []byte {
 func readBytes(r io.Reader) ([]byte, int, error) {
 	var bytes []byte
 
-	br := bufio.NewReader(r)
 	for {
-		b, err := br.ReadByte()
+		b, err := readByte(r)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -215,7 +213,18 @@ func readBytes(r io.Reader) ([]byte, int, error) {
 			break
 		}
 	}
+
 	return bytes, len(bytes), nil
+}
+
+func readByte(r io.Reader) (byte, error) {
+	b := make([]byte, 1)
+	_, err := r.Read(b)
+	if err != nil {
+		return 0, err
+	}
+
+	return b[0], nil
 }
 
 func lastByte(b byte) bool {

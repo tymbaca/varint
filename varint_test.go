@@ -263,10 +263,13 @@ func Test_readBytes(t *testing.T) {
 
 	for _, tt := range cases {
 		t.Run(fmt.Sprint(tt), func(t *testing.T) {
-			actual, n, err := readBytes(bytes.NewBuffer(tt.arg))
+			buf := bytes.NewBuffer(tt.arg)
+			actual, n, err := readBytes(buf)
 			require.NoError(t, err)
 			require.Equal(t, tt.expect, actual)
+
 			require.Equal(t, len(tt.expect), n)
+			require.Equal(t, len(tt.arg)-len(tt.expect), buf.Len(), "probably consumed more bytes that needed")
 		})
 	}
 }
